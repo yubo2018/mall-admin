@@ -67,6 +67,8 @@ export default {
         }
     }
     .ivu-layout-content{
+        height: 100%;
+        min-width: 1000px;
         border-radius: 4px 4px 0 0;
         margin: 10px 10px 0 10px;
         background: rgb(255, 255, 255);
