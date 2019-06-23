@@ -4,7 +4,9 @@
         <h3 class="title">基本信息</h3>
         <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="200">
             <FormItem label="商品名称" prop="name">
-                <Input v-model="formValidate.name" placeholder="Enter your name"></Input>
+                <Col span="10">
+                    <Input v-model="formValidate.name" placeholder="请输入商品名称" ></Input>
+                </Col>
             </FormItem>
             <FormItem label="商品类目" prop="mail">
                 <Button type="default" class="tools">选择商品类目</Button>

@@ -7,7 +7,7 @@
             <EditorCenter></EditorCenter>
         </Col>
         <Col :span="8" style="height:100%;position: relative;">
-            <Drawer v-model="visible" placement="right" :mask="false" inner :transfer="false" width="100%"  title="抽屉标题" :styles="styles" >
+            <Drawer v-model="visible" placement="right" :mask="false" inner :transfer="false" width="100%" :title="componentName" :styles="styles" >
                 <ModelA></ModelA>
             </Drawer>
             <EditorRight></EditorRight>
@@ -36,11 +36,14 @@
                     height: 'calc(100% - 55px)',
                     paddingBottom: '53px',
                 },
+
+                componentName:""
             }
         },
         methods:{
             editorRightVisible(val,callback){
-                this.visible = val
+                this.visible = false
+                this.componentName = val.moduleName
                 setTimeout(()=>{
                     this.visible = !this.visible
                     callback(!this.visible)

@@ -87,7 +87,16 @@ const goodsRouter = {
                 navShow: true,
                 title: '商品属性',
             },
-        }
+        },{
+            path: '/AddAttribute',
+            component: resolve => require(['../pages/Goods/AddAttribute'], resolve),
+            name: 'AddAttribute',
+            meta: {
+                navShow: false,
+                navActive: '1-4',
+                title: '属性编辑',
+            },
+        },
     ]
 }
 // 订单

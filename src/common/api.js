@@ -2,7 +2,7 @@ import axios from 'axios'
 import qs from 'qs'
 import _this from '../main'
 import common from './common'
-let apiUrl = "http://127.0.0.1:8006"
+let apiUrl = "http://127.0.0.1:8007"
 
 let methodToken = ['/member/login']
 
@@ -10,17 +10,16 @@ let methodToken = ['/member/login']
 // 接口token验证
 const post = (method, data, callback) => {
     // 如果是需要登陆的，增加token
-    if (!methodToken.includes(method)) {
-        let userToken = common.getStorage('user_token')
-        if (!userToken) {
-            common.jumpToLogin()
-            return false
-        } else {
-            data.token = userToken
-        }
-    }
-    apiUrl = apiUrl + method
-    sendPost(apiUrl, qs.stringify(data), {}, callback)
+    // if (!methodToken.includes(method)) {
+    //     let userToken = common.getStorage('user_token')
+    //     if (!userToken) {
+    //         common.jumpToLogin()
+    //         return false
+    //     } else {
+    //         data.token = userToken
+    //     }
+    // }
+    sendPost(apiUrl + method, qs.stringify(data), {}, callback)
 }
 
 // axios 发送请求统一处理
@@ -87,3 +86,6 @@ export const reg = (data, callback) => post('/member/register', data, callback)
 
 // 用户登录
 export const login = (data, callback) => post('/member/login', data, callback)
+
+// 所有商品
+export const goodsAll = (data, callback) => post('/goods/list', data, callback)

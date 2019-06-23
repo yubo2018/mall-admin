@@ -39,7 +39,7 @@
                     <Option value="2">商品编码</Option>
                     <Option value="4">SPU编码</Option>
                 </Select>
-                <Input search enter-button :placeholder="'请输入'+model1" class="tools" style="margin-left:5px;min-width:200px"/>
+                <Input search enter-button :placeholder="'请输入'+ model1" class="tools" style="margin-left:5px;min-width:200px" @on-search="getGoodsAll"/>
             </Col>
             <Col span="24">
                 <Button type="primary" ghost to="/AddGoods" class="tools">新增商品</Button>
@@ -54,7 +54,30 @@
                 </Select>
            </Col>
         </Row>
-        <Table  border :columns="columns2" :data="data3"></Table>
+        <Table  border :loading="loading" :columns="columns" :data="tableData">
+            <template slot-scope="{ row }" slot="goodsName">
+                <Row type="flex" justify="center" align="middle">
+                    <Col :span="4">
+                        <img src="https://image-c.weimobwmc.com/saas-wxbiz/c0e3eb90ef9242c08b0bd9c1b06759b6.png"
+                            style="widthL36px;height:36px" 
+                            :alt="row.goodsName">
+                    </Col>
+                    <Col :span="20">
+                        <strong>{{ row.goodsName }}</strong>
+                    </Col>
+                </Row>
+            </template>
+            <template slot-scope="{ row }" slot="isSale">
+                <Row type="flex" justify="center" align="middle">
+                    <Col :span="12">
+                        {{row.isSale == 1? '已上架' : '已下架'}}
+                    </Col>
+                    <Col :span="12">
+                      <i-switch v-model="row.isSale"/>
+                    </Col>
+                </Row>
+            </template>
+        </Table>
         <!-- <footer>
             <Page :total="100" show-elevator size="small"/>
         </footer> -->
@@ -67,37 +90,47 @@
             return {
                 model1:'',
                 loading:false,
-                columns2: [
+                columns: [
                     {
-                        title: 'Name',
-                        key: 'name',
-                        width: 100,
+                        type: 'selection',
+                        width: 50,
+                        align: 'center'
                     },
                     {
-                        title: 'Age',
-                        key: 'age',
+                        title: '商品名称',
+                        slot: 'goodsName',
+                        width: 300,
                     },
                     {
-                        title: 'Province',
-                        key: 'province',
+                        title: '价格',
+                        key: 'marketPrice',
                     },
                     {
-                        title: 'City',
+                        title: '总库存',
+                        key: 'goodsStock',
+                    },
+                    {
+                        title: '实际销量',
                         key: 'city',
                     },
                     {
-                        title: 'Address',
-                        key: 'address',
+                        title: '上下架时间',
+                        key: 'saleTime',
                     },
                     {
-                        title: 'Postcode',
+                        title: '上架状态',
+                        slot: 'isSale',
+                        width: 140,
+                    },
+                    {
+                        title: '排序',
                         key: 'zip',
                     },
                     {
-                        title: 'Action',
+                        title: '操作',
                         key: 'action',
                         fixed: 'right',
-                        width: 120,
+                        width: 240,
                         render: (h, params) => {
                             return h('div', [
                                 h('Button', {
@@ -105,52 +138,37 @@
                                         type: 'text',
                                         size: 'small'
                                     }
-                                }, 'View'),
+                                }, '推广商品'),
                                 h('Button', {
                                     props: {
                                         type: 'text',
                                         size: 'small'
                                     }
-                                }, 'Edit')
+                                }, '编辑')
                             ]);
                         }
                     }
                 ],
-                data3: [
-                    {
-                        name: 'John Brown',
-                        age: 18,
-                        address: 'New York No. 1 Lake Park',
-                        province: 'America',
-                        city: 'New York',
-                        zip: 100000
-                    },
-                    {
-                        name: 'Jim Green',
-                        age: 24,
-                        address: 'Washington, D.C. No. 1 Lake Park',
-                        province: 'America',
-                        city: 'Washington, D.C.',
-                        zip: 100000
-                    },
-                    {
-                        name: 'Joe Black',
-                        age: 30,
-                        address: 'Sydney No. 1 Lake Park',
-                        province: 'Australian',
-                        city: 'Sydney',
-                        zip: 100000
-                    },
-                    {
-                        name: 'Jon Snow',
-                        age: 26,
-                        address: 'Ottawa No. 2 Lake Park',
-                        province: 'Canada',
-                        city: 'Ottawa',
-                        zip: 100000
-                    }
-                ]
+                tableData: []
             }
+        },
+        methods: {
+            init(){
+                this.getGoodsAll()
+            },
+            getGoodsAll(){
+                this.loading = true
+                this.$api.goodsAll({},(res)=>{
+                    this.tableData = res.data
+                    this.loading = false
+                    console.log(res)
+                })
+            }
+        },
+        created(){
+            this.init()
+        },
+        mounted(){
         }
     }
 </script>
