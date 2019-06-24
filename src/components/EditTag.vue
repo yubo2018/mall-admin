@@ -3,15 +3,16 @@
         v-model="visible"
         :title="title"
         :styles="{top: '20px'}"
-        :loading="loading"
-        @on-ok="handleSubmit"
-        @on-cancel="handleCancel"
         @on-visible-change="handleChange">
         <Form ref="formValidate" :model="formData" :rules="ruleValidate" :label-width="100">
             <FormItem label="标签名称" prop="tagName" style="width:80%">
                 <Input v-model="formData.tagName" placeholder="最多5个字或10个字符" ></Input>
             </FormItem>
         </Form>
+        <div slot="footer">
+            <Button type="text" size="large" @click="handleCancel">取消</Button>
+            <Button type="primary" size="large" :loading="loading" @click="handleSubmit">确定</Button>
+        </div>
     </Modal>
 </template>
 
@@ -34,8 +35,8 @@ export default {
     data(){
         return {
             visible: false,
-            loading: true,
-            formData: this.data,
+            loading: false,
+            formData: {},
             ruleValidate: {
                 tagName: [{ required: true, message: '必须填写', trigger: 'blur' } ]
             }
@@ -43,34 +44,33 @@ export default {
     },
     methods: {
         handleSubmit(){
-            console.log(this.formData)
             this.$refs.formValidate.validate((valid) => {
                 if (valid) {
-                    this.$api.tagEdit(this.formData,(res)=>{
-                        this.visible = false
-                        this.loading = false;
+                    this.loading = true;
+                    this.$api.tagEdit(this.formData).then((res) =>{
+                        this.visible = this.loading = false
+                        this.$refs.formValidate.resetFields();
+                        this.$emit('saveTagOk', event)
+                    }).catch((err) =>{
+                        this.loading = false
                     })
-                }else{
-                    this.loading = false;
-                    this.$nextTick(() => {
-                        this.loading = true;
-                    });
                 }
             })
         },
         handleCancel(){
+            this.visible = false
             this.$refs.formValidate.resetFields();
         },
         handleChange(event){
-            this.$nextTick(() => {
-                this.loading = true;
-            });
             this.$emit('input', event)
         }
     },
     watch: {
         value(val){
-            this.visible = val
+            if(val){
+                this.visible = val
+                this.formData = this.data
+            }
         }
     }
 }

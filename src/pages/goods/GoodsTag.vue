@@ -16,9 +16,9 @@
             <Page :total="100" show-elevator size="small"/>
         </footer> -->
 
-        <!-- <EditTag v-model="showTagModal" :data="formData" :title="showTagModalTitle"></EditTag> -->
+        <EditTag v-model="showTagModal" :data="formData" :title="showTagModalTitle" @saveTagOk="getTagAll"></EditTag>
 
-        <Modal
+        <!-- <Modal
             v-model="showTagModal"
             :title="showTagModalTitle"
             :styles="{top: '20px'}"
@@ -30,7 +30,7 @@
                     <Input v-model="formData.tagName" placeholder="最多5个字或10个字符" ></Input>
                 </FormItem>
             </Form>
-        </Modal>
+        </Modal> -->
 
         <Modal v-model="delTagModal" width="360" :styles="{top: '20px'}">
             <p slot="header" style="color:#f60;text-align:center">
@@ -121,12 +121,11 @@
             }
         },
         methods: {
-            getTagAll(){
+            async getTagAll(){
                 this.loading = true
-                this.$api.tagAll({},(res)=>{
-                    this.tableData = res.data
-                    this.loading = false
-                })
+                let data = await this.$api.tagAll()
+                this.tableData = data.data
+                this.loading = false
             },
             addTag(){
                 this.showTagModalTitle = '新建标签'
@@ -144,6 +143,7 @@
                         this.$api.tagEdit(this.formData,(res)=>{
                             this.showTagModal = false;
                             this.$refs.formValidate.resetFields();
+                            this.getTagAll()
                         })
                     } else {
                         this.submitLoading = false;
@@ -165,11 +165,12 @@
                 }
             },
             handleDel(index){
-                this.tableSelect = [this.tableData[index]._id]
+                this.tableSelect = []
+                this.tableSelect.push(this.tableData[index]._id)
                 this.delTagModal = true
             },
             handleStartDel(){
-                this.$api.tagDel({delArr: this.tableSelect},(res)=>{
+                this.$api.tagDel({id: this.tableSelect.join(',')},(res)=>{
                     this.delTagModal = false;
                     this.getTagAll()
                 })
