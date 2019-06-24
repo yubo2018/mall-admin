@@ -42,7 +42,7 @@
                 <Col span="20" class="tag-box">
                     <vuedraggable class="wrapper" v-model="formData.attributeList">
                         <transition-group>
-                            <Tag type="border" closable @on-close="handleTagClose" color="primary" v-for="(item, index) in formData.attributeList" :key="index" >{{item}}</Tag>
+                            <Tag type="border" closable @on-close="handleTagClose" color="primary" v-for="(item, index) in formData.attributeList" :key="item" >{{item}}</Tag>
                         </transition-group>
                     </vuedraggable>
                 </Col>

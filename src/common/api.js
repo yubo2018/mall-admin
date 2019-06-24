@@ -28,13 +28,9 @@ const sendPost = (url, data, config = {}, callback) => {
         // _this.$dialog.loading.open('上传中...')
     }
     axios.post(url, data, config).then(response => {
-        if (!response.data.status) {
-            if (response.data.data === 14007 || response.data.data === 14006) {
-                // 用户未登录或者token过期 清空本地user_token
-                common.removeStorage('user_token')
-                // 跳转至登录
-                common.jumpToLogin()
-            }
+        console.log(response.data)
+        if (response.data.code == 0) {
+            // return _this.$Message.error(response.data.message);
         }
         callback(response.data)
     }).catch(err => {
@@ -89,3 +85,12 @@ export const login = (data, callback) => post('/member/login', data, callback)
 
 // 所有商品
 export const goodsAll = (data, callback) => post('/goods/list', data, callback)
+
+// 标签列表
+export const tagAll = (data, callback) => post('/tag/list', data, callback)
+
+// 标签编辑
+export const tagEdit = (data, callback) => post('/tag/save', data, callback)
+
+// 标签删除
+export const tagDel = (data, callback) => post('/tag/del', data, callback)
