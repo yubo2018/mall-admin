@@ -62,12 +62,8 @@
 
         
 
-        <Modal
-            title="编辑分组"
-            v-model="showGroupModal"
-            :styles="{top: '20px'}">
-            <EditGroup :formData="formData"></EditGroup>
-        </Modal>
+
+        <EditGroup v-model="showGroupModal" :formData="formData"></EditGroup>
 
         <Modal v-model="delGroupModal" width="360" :styles="{top: '20px'}">
             <p slot="header" style="color:#f60;text-align:center">

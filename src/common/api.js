@@ -38,6 +38,7 @@ axios.interceptors.response.use(
         if (response.status === 200 && response.data.status) {
             return Promise.resolve(response)
         } else {
+            console.log(response)
             _this.$Message.error(response.data.message)
             return Promise.reject(response)
         }
@@ -141,3 +142,7 @@ export const tagEdit = (param) => post('/tag/save', param)
 
 // 标签删除
 export const tagDel = (param) => post('/tag/del', param)
+
+// 标签删除
+export const groupSave = (param) => post('/goods/group/save', param)
+
