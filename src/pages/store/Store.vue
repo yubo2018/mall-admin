@@ -1,9 +1,9 @@
 <template>
     <Row :gutter="16" class="editor-content">
-        <Col :span="6">
+        <Col :span="6" style="height:100%">
             <EditorLeft @editorRightVisible="editorRightVisible"></EditorLeft>
         </Col>
-        <Col :span="10" style="background: #f5f7f9;">
+        <Col :span="10" style="background: #f5f7f9;height:100%">
             <EditorCenter></EditorCenter>
         </Col>
         <Col :span="8" style="height:100%;position: relative;">

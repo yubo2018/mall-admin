@@ -7,7 +7,7 @@
                 <Button type="default" class="tools" @click="handleBatchDel">批量删除</Button>
            </Col>
             <Col span="4" style="display: flex;align-items: center;">
-                <Input search enter-button placeholder="请输入标签名称" class="tools" style="margin-left:5px;min-width:200px" @on-search="getTagAll"/>
+                <Input search enter-button placeholder="请输入标签名称" v-model="qurey.tagName" class="tools" style="margin-left:5px;min-width:200px" @on-search="getTagAll"/>
             </Col>
         </Row>
 
@@ -17,20 +17,6 @@
         </footer> -->
 
         <EditTag v-model="showTagModal" :data="formData" :title="showTagModalTitle" @saveTagOk="getTagAll"></EditTag>
-
-        <!-- <Modal
-            v-model="showTagModal"
-            :title="showTagModalTitle"
-            :styles="{top: '20px'}"
-            :loading="submitLoading"
-            @on-ok="handleSubmit"
-            @on-cancel="handleCancel">
-            <Form ref="formValidate" :model="formData" :rules="ruleValidate" :label-width="100">
-                <FormItem label="标签名称" prop="tagName" style="width:80%">
-                    <Input v-model="formData.tagName" placeholder="最多5个字或10个字符" ></Input>
-                </FormItem>
-            </Form>
-        </Modal> -->
 
         <Modal v-model="delTagModal" width="360" :styles="{top: '20px'}">
             <p slot="header" style="color:#f60;text-align:center">
@@ -117,13 +103,16 @@
                 },
                 // 删除
                 delTagModal:false,
-                delTagModaLoading: false
+                delTagModaLoading: false,
+                qurey: {
+                    tagName: ''
+                }
             }
         },
         methods: {
             async getTagAll(){
                 this.loading = true
-                let data = await this.$api.tagAll()
+                let data = await this.$api.tagAll(this.qurey)
                 this.tableData = data.data
                 this.loading = false
             },
@@ -133,25 +122,9 @@
             },
             editTag(index){
                 this.showTagModalTitle = '编辑标签'
-                this.formData['tagId'] = this.tableData[index].tagId
+                this.formData['_id'] = this.tableData[index]._id
                 this.formData['tagName'] = this.tableData[index].tagName
                 this.showTagModal = true
-            },
-            handleSubmit(){
-                this.$refs.formValidate.validate((valid) => {
-                    if (valid) {
-                        this.$api.tagEdit(this.formData,(res)=>{
-                            this.showTagModal = false;
-                            this.$refs.formValidate.resetFields();
-                            this.getTagAll()
-                        })
-                    } else {
-                        this.submitLoading = false;
-                        this.$nextTick(() => {
-                            this.submitLoading = true;
-                        });
-                    }
-                })
             },
             handleCancel(){
                 this.$refs.formValidate.resetFields();
@@ -162,27 +135,38 @@
                 }
                 if(!this.delTagModal){
                     this.delTagModal = true
+                    this.isMulti = true
                 }
             },
             handleDel(index){
                 this.tableSelect = []
                 this.tableSelect.push(this.tableData[index]._id)
                 this.delTagModal = true
+                this.isMulti = false
             },
             handleStartDel(){
-                this.$api.tagDel({id: this.tableSelect.join(',')},(res)=>{
-                    this.delTagModal = false;
+                let params = {
+                    id: this.isMulti ? this.tableMultiSelect.join(',') : this.tableSelect.join(',')
+                }
+                this.delTagModaLoading = true
+                this.$api.tagDel(params).then(res =>{
+                    this.delTagModal = false
+                    this.delTagModaLoading = false
+                    this.tableMultiSelect = []
                     this.getTagAll()
+                }).catch((err) =>{
+                    this.delTagModaLoading = false
                 })
             },
-            selection(e){
-                this.tableMultiSelect = e
+            selection(event){
+                this.tableMultiSelect = []
+                event.map(item =>{
+                    this.tableMultiSelect.push(item._id)
+                })
             }
         },
         created(){
             this.getTagAll()
-        },
-        mounted(){
         }
     }
 </script>

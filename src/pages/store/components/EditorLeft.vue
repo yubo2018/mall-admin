@@ -37,7 +37,7 @@
                 <Panel v-for="(item,index) in model" :key="index" :name="collapsePush(item.moduleGrouId)">
                     {{item.moduleGroupName}}
                     <Row slot="content" type="flex">
-                        <Col span="8" class="model-btn" v-for="(item,index) in item.subModule" :key="index">
+                        <Col span="6" class="model-btn" v-for="(item,index) in item.subModule" :key="index">
                             <Button type="text" @click="onBtn(item)">
                                 <img :src="item.moduleIcom" alt="">
                                 <span>{{item.moduleName}}</span>
