@@ -77,14 +77,17 @@
                 <Button type="error" size="large" long :loading="delGroupModaLoading">永久删除</Button>
             </div>
         </Modal>
+        <MaterialLibrary></MaterialLibrary>
     </Card>
 </template>
 
 <script>
 import EditGroup from '@/components/EditGroup'
+import MaterialLibrary from '@/components/MaterialLibrary'
     export default {
         components: {
-            EditGroup
+            EditGroup,
+            MaterialLibrary
         },
         data () {
             return {
