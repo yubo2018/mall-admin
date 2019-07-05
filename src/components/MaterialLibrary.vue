@@ -3,8 +3,7 @@
         v-model="visible"
         title="素材库"
         width="950px"
-        class-name="vertical-center-modal"
-        :loading="loading">
+        class-name="vertical-center-modal">
             <Row>
                 <Col :span="4" >
                     <Menu width="100%" :active-name="activeName " style="height:100%">
@@ -31,9 +30,18 @@
                         </div>
              
                         <Row :gutter="16" style="height:396px;margin:0px 0 0px 0px;padding:0;overflow-y: scroll;">
-                            <Col :span="4" v-for="(item,index) in 100" :key="index" style="height:110px">{{item}}
-                                <Input size="small" placeholder="default size" />
+                            <Col :span="4" v-for="(item,index) in tabelData" :key="index" style="height:110px">
+                                <div v-if="item.fileType == 1">
+                                    <Icon type="md-folder" :size="100" color="rgb(255,232,148)"/>
+                                </div>
+                                <div v-if="item.fileType == 2">
+                                    <Icon type="md-folder" :size="100" color="rgb(255,232,148)"/>
+                                </div>
+                                <div v-if="item.fileType == 3">
+                                    <Icon type="md-folder" :size="100" color="rgb(255,232,148)"/>
+                                </div>
                             </Col>
+                            <Spin size="large" fix v-if="loading"></Spin>
                         </Row>
                     </div>
                     <div class="content-footer">
@@ -44,7 +52,7 @@
         <div slot="footer">
             <span >已选择 0 张,还可以选择 2 张</span>
             <Button type="text" size="large" @click="visible = false">取消</Button>
-            <Button type="primary" size="large" :loading="loading">确定</Button>
+            <Button type="primary" size="large">确定</Button>
         </div>
     </Modal>
 </template>
@@ -61,15 +69,33 @@
             return {
                 visible: this.value,
                 loading: false,
-                activeName: '1'
+                activeName: '1',
+                tabelData:[{
+                    fileId: 11,
+                    fileType: 1,
+                    fileFormat: 'png',
+                    fileName:'',
+                    url:'',
+                    children: [{
+                        fileId: 12,
+                        fileType: 1,
+                        fileFormat: 'png',
+                        fileName:'',
+                        url:'',
+                    }]
+                }]
             }
         },
         methods: {
-            asyncOK () {
+            handleInitData(){
+                this.loading = true;
                 setTimeout(() => {
-                    this.modal6 = false;
+                    this.loading = false;
                 }, 2000);
             }
+        },
+        mounted (){
+            this.handleInitData()
         }
     }
 </script>
