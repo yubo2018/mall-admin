@@ -141,6 +141,7 @@ function isWeiXinBrowser () {
     }
 }
 
+
 export default {
     setStorage: setStorage,
     getStorage: getStorage,

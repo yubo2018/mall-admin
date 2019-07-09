@@ -1,6 +1,7 @@
 import axios from 'axios' // 引入axios
 import QS from 'qs' // 引入qs模块，用来序列化post类型的数据，后面会提到
 import _this from '../main'
+import formData from './formData'
 // 环境的切换
 // if (process.env.NODE_ENV === 'development') {
 //     axios.defaults.baseURL = 'https://www.baidu.com'
@@ -145,4 +146,6 @@ export const tagDel = (param) => post('/tag/del', param)
 
 // 标签删除
 export const groupSave = (param) => post('/goods/group/save', param)
+
+export const upload = (param) => formData(param)
 

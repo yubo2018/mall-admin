@@ -86,7 +86,7 @@
                 <Button type="error" size="large" long >永久删除</Button>
             </div>
         </Modal>
-        <CropperImage v-model="isCropperImage"></CropperImage>
+        <CropperImage v-model="isCropperImage" ref="cropper"></CropperImage>
     </Modal>
 </template>
 
@@ -182,6 +182,8 @@
             handleUpload(e){
                 if(e == 1){
                     this.isCropperImage = true
+                } else {
+
                 }
             },
             handleUserSelected(item ,index){

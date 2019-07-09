@@ -111,7 +111,7 @@
                 if (!/\.(gif|jpg|jpeg|png|bmp|GIF|JPG|PNG)$/.test(e.target.value)) {
                     return  this.$Message.error('图片类型必须是.gif,jpeg,jpg,png,bmp中的一种');
                 }
-
+                this.$api.upload(file)
                 var reader = new FileReader()
                 reader.onload = (e) => {
                     let data
@@ -123,6 +123,7 @@
                         data = e.target.result
                     }
                     this.option.img = data
+                    
                 }
                 // 转化为base64
                 // reader.readAsDataURL(file)
@@ -133,7 +134,7 @@
                 this.$emit('input', event)
             },
             handleSubmit(){
-
+              
             }
         },
         watch: {
