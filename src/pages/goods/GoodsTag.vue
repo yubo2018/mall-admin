@@ -7,7 +7,7 @@
                 <Button type="default" class="tools" @click="handleBatchDel">批量删除</Button>
            </Col>
             <Col span="4" style="display: flex;align-items: center;">
-                <Input search enter-button placeholder="请输入标签名称" v-model="qurey.tagName" class="tools" style="margin-left:5px;min-width:200px" @on-search="getTagAll"/>
+                <Input search enter-button placeholder="请输入标签名称" v-model="qurey.tagName" class="tools" style="margin-left:5px;min-width:200px" @on-search="getTagList"/>
             </Col>
         </Row>
 
@@ -16,7 +16,7 @@
             <Page :total="100" show-elevator size="small"/>
         </footer> -->
 
-        <EditTag v-model="showTagModal" :data="formData" :title="showTagModalTitle" @saveTagOk="getTagAll"></EditTag>
+        <EditTag v-model="showTagModal" :data="formData" :title="showTagModalTitle" @success="getTagList"></EditTag>
 
         <Modal v-model="delTagModal" width="360" :styles="{top: '20px'}">
             <p slot="header" style="color:#f60;text-align:center">
@@ -110,24 +110,23 @@
             }
         },
         methods: {
-            async getTagAll(){
+            async getTagList(e){
+                console.log(e)
                 this.loading = true
-                let data = await this.$api.tagAll(this.qurey)
+                let data = await this.$api.tagList(this.qurey)
                 this.tableData = data.data
                 this.loading = false
             },
             addTag(){
                 this.showTagModalTitle = '新建标签'
+                this.formData['tagId'] = ''
                 this.showTagModal = true
             },
             editTag(index){
                 this.showTagModalTitle = '编辑标签'
-                this.formData['_id'] = this.tableData[index]._id
+                this.formData['tagId'] = this.tableData[index].tagId
                 this.formData['tagName'] = this.tableData[index].tagName
                 this.showTagModal = true
-            },
-            handleCancel(){
-                this.$refs.formValidate.resetFields();
             },
             handleBatchDel(){
                 if(!this.tableMultiSelect.length){
@@ -139,34 +138,34 @@
                 }
             },
             handleDel(index){
-                this.tableSelect = []
-                this.tableSelect.push(this.tableData[index]._id)
+                this.tableSelect = [this.tableData[index].tagId]
                 this.delTagModal = true
                 this.isMulti = false
             },
-            handleStartDel(){
-                let params = {
-                    id: this.isMulti ? this.tableMultiSelect.join(',') : this.tableSelect.join(',')
+            async handleStartDel(){
+                try{
+                    this.delTagModaLoading = true
+                    if(this.isMulti){
+                        await this.$api.delTag({tagId: this.tableMultiSelect.join(',')})
+                        this.tableMultiSelect = []
+                    } else {
+                        await this.$api.delTag({tagId: this.tableSelect.join(',')})
+                    }
+                    this.delTagModaLoading = this.delTagModal = false
+                    this.getTagList()
+                } catch(err){
+                    this.delTagModaLoading = false
                 }
-                this.delTagModaLoading = true
-                this.$api.tagDel(params).then(res =>{
-                    this.delTagModal = false
-                    this.delTagModaLoading = false
-                    this.tableMultiSelect = []
-                    this.getTagAll()
-                }).catch((err) =>{
-                    this.delTagModaLoading = false
-                })
             },
             selection(event){
                 this.tableMultiSelect = []
                 event.map(item =>{
-                    this.tableMultiSelect.push(item._id)
+                    this.tableMultiSelect.push(item.tagId)
                 })
             }
         },
         created(){
-            this.getTagAll()
+            this.getTagList()
         }
     }
 </script>

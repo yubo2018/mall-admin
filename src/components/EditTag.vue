@@ -10,7 +10,7 @@
             </FormItem>
         </Form>
         <div slot="footer">
-            <Button type="text" size="large" @click="handleCancel">取消</Button>
+            <Button type="text" size="large" @click="visible = false">取消</Button>
             <Button type="primary" size="large" :loading="loading" @click="handleSubmit">确定</Button>
         </div>
     </Modal>
@@ -44,24 +44,29 @@ export default {
     },
     methods: {
         handleSubmit(){
-            this.$refs.formValidate.validate((valid) => {
+            this.$refs.formValidate.validate(async (valid) => {
                 if (valid) {
-                    this.loading = true;
-                    this.$api.tagEdit(this.formData).then((res) =>{
+                    try {
+                        let res = null
+                        this.loading = true;
+                        if(this.formData.tagId){
+                            res = await this.$api.updateTag(this.formData)
+                        }else{
+                            res = await this.$api.addTag(this.formData)
+                        }
                         this.visible = this.loading = false
-                        this.$refs.formValidate.resetFields();
-                        this.$emit('saveTagOk', event)
-                    }).catch((err) =>{
+                        this.$Message.success(res.message)
+                        this.$emit('success', res)
+                    } catch (err){
                         this.loading = false
-                    })
+                    }
                 }
             })
         },
-        handleCancel(){
-            this.visible = false
-            this.$refs.formValidate.resetFields();
-        },
         handleChange(event){
+            if(!event){
+                this.$refs.formValidate.resetFields();
+            }
             this.$emit('input', event)
         }
     },
