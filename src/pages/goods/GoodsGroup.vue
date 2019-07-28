@@ -60,9 +60,6 @@
             </Panel>
         </Collapse>
 
-        
-
-
         <EditGroup v-model="showGroupModal" :formData="formData"></EditGroup>
 
         <Modal v-model="delGroupModal" width="360" :styles="{top: '20px'}">
@@ -77,7 +74,6 @@
                 <Button type="error" size="large" long :loading="delGroupModaLoading">永久删除</Button>
             </div>
         </Modal>
-        <MaterialLibrary></MaterialLibrary>
     </Card>
 </template>
 

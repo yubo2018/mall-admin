@@ -156,19 +156,18 @@
             init(){
                 this.getGoodsAll()
             },
-            getGoodsAll(){
+            async getGoodsAll(){
                 this.loading = true
-                this.$api.goodsAll({},(res)=>{
-                    this.tableData = res.data
-                    this.loading = false
-                    console.log(res)
-                })
+                let data = await this.$api.goodsAll({});
+                this.loading = false
+                this.tableData = data.data
             }
         },
         created(){
             this.init()
         },
         mounted(){
+            
         }
     }
 </script>

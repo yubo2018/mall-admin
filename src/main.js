@@ -11,6 +11,7 @@ import store from './store'
 import * as Api from './common/api'
 import Common from './common/common'
 
+
 Vue.use(VueRouter)
 Vue.use(iView)
 Vue.config.productionTip = false

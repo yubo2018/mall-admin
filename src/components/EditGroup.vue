@@ -24,7 +24,7 @@
                 <Input v-model="selfFormData.groupName" placeholder="最多5个字或10个字符" ></Input>
             </FormItem>
             <FormItem label="二级分组图片" prop="groupImg">
-                <Button type="default">上传图片</Button>
+                <SelectImage v-model="src" text="添加图片" @selectImage="handleSelectImage"></SelectImage>
             </FormItem>
             <FormItem label="热门推荐">
                 <RadioGroup v-model="selfFormData.isRecom">
@@ -43,7 +43,11 @@
 </template>
 
 <script>
+import SelectImage from '@/components/SelectImage'
 export default {
+    components:{
+        SelectImage
+    },
     props: {
         formData: {
             type: Object,
@@ -56,6 +60,7 @@ export default {
     },
     data(){
         return {
+            src:"",
             groupList:[{
                 groupId: 1,
                 groupName: '热卖'
@@ -79,6 +84,9 @@ export default {
         }
     },
     methods: {
+        handleSelectImage(){
+
+        },
         handleChange(event){
             this.$emit('input', event)
         },

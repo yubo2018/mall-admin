@@ -8,7 +8,7 @@
         </Steps>
         <Tabs value="name1" class="tabs-nav-container">
             <TabPane name="name1">
-                <AddGoods1/>
+                <AddGoods1 @on-select-category="isSelectCategory = true"/>
             </TabPane>
             <TabPane name="name2">
                 <AddGoods2/>
@@ -17,23 +17,41 @@
                 <AddGoods3/>
             </TabPane>
         </Tabs>
+        <SelectCategory v-model="isSelectCategory" @on-ok="handleSelectChange"></SelectCategory>
+        <!-- <MaterialLibrary v-model="isSelectImage"></MaterialLibrary> -->
     </Card>
 </template>
 
 <script>
 import AddGoods1 from './components/AddGoods1'
-import AddGoods2 from './components/AddGoods1'
-import AddGoods3 from './components/AddGoods1'
+import AddGoods2 from './components/AddGoods2'
+import AddGoods3 from './components/AddGoods3'
+import SelectCategory from '@/components/SelectCategory'
+import MaterialLibrary from '@/components/MaterialLibrary'
 export default {
     components:{
         AddGoods1,
         AddGoods2,
-        AddGoods3
+        AddGoods3,
+        SelectCategory,
+        MaterialLibrary
     },
     data(){
         return {
+            // 选择类目
+            isSelectCategory: false,
+            isSelectImage: false,
             formValidate:{},
             ruleValidate:{}
+        }
+    },
+    methods: {
+        handleSelectCategory () {
+            this.isSelectCategory = true
+        },
+        handleSelectChange (val) {
+            this.isSelectImage = true
+            console.log(val)
         }
     }
 }
@@ -51,8 +69,6 @@ export default {
 }
 .tabs-nav-container .ivu-tabs-bar{
     display: none;
-   
-  
 }
 .goods-add-content .ivu-card-body{
     padding: 16px 0;

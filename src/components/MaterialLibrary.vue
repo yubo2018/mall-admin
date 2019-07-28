@@ -4,70 +4,70 @@
         title="素材库"
         width="950px"
         class-name="vertical-center-modal">
-            <Row>
-                <Col :span="4" >
-                    <Menu width="100%" :active-name="activeName " style="height:100%">
-                        <MenuItem name="1">我的文件</MenuItem>
-                        <MenuItem name="3">图片库</MenuItem>
-                        <!-- <MenuItem name="2">我的视频</MenuItem> -->
-                    </Menu>
-                </Col>
-                <Col :span="20" class="content">
-                    <div class="content-body">
-                        <div class="tools">
-                            <div>
-                                <Button type="primary" @click="handleAddFile">新建文件夹</Button>
-                            </div>
-                            <div style="margin-left:5px;">
-                                <Button type="primary" ghost @click="handleUpload(1)">裁剪上传</Button>
-                            </div>
-                            <div style="margin-left:5px;flex:1">
-                                <Button type="default" @click="handleUpload(2)">批量上传</Button>
-                            </div>
-                            <div>
-                                <Input search enter-button placeholder="请输入" style="margin-left:5px;min-width:200px" />
-                            </div>
-                        </div>
-                        <Breadcrumb style="padding:0 20px">
-                            <BreadcrumbItem v-for="(item ,index) in hierarchy" :key="index" @click="handleOpenFile">{{item.label}}</BreadcrumbItem>
-                        </Breadcrumb>
-                        <Row style="height:375px;margin:0px 10px;padding:0;overflow-y: scroll;">
-                            <vuedraggable v-model="tabelData">
-                                <Col :span="4" v-for="(item,index) in tabelData" :key="index" class="item" :style="{background: status || item.userSelected ?'#f1f5fa':''}">
-                                    <Icon type="ios-checkmark-circle" v-if="status" class="checkmark" :color="item.adminSelected ? '#a33991':''"  @click="handleAdminSelected(item, index)"/>
-                                    <Icon type="ios-checkmark-circle" class="checkSelected" :class="item.userSelected ? 'userCheck':''" v-if="!status && item.fileType == 2"  @click="handleUserSelected(item, index)"/>
-                                    <div v-if="item.fileType == 1" @dblclick="handleOpenFile(item, index)">
-                                    <div style="height:100px">
-                                            <Icon type="ios-folder-open" :size="80" color="rgb(255,232,148)" v-if="item.children.length"/>
-                                            <Icon type="md-folder" :size="80" color="rgb(255,232,148)" v-else/>
-                                    </div>
-                                        <input type="text" :value="item.fileName">
-                                    </div>
-                                    <div v-if="item.fileType == 2">
-                                        <div class="image" style="height:100px" :style="{ 'background-image':'url('+ item.url +')'}"></div>
-                                        <input type="text" :value="item.fileName">
-                                    </div>
-                                    <div v-if="item.fileType == 3">
-                                        <Icon type="md-folder" :size="100" color="rgb(255,232,148)"/>
-                                        <input type="text">
-                                    </div>
-                                </Col>
-                                <Spin size="large" fix v-if="loading"></Spin>
-                            </vuedraggable>
-                        </Row>
-                    </div>
-                    <div class="content-footer">
+        <Row>
+            <Col :span="4" >
+                <Menu width="100%" :active-name="activeName " style="height:100%">
+                    <MenuItem name="1">我的文件</MenuItem>
+                    <MenuItem name="3">图片库</MenuItem>
+                    <!-- <MenuItem name="2">我的视频</MenuItem> -->
+                </Menu>
+            </Col>
+            <Col :span="20" class="content">
+                <div class="content-body">
+                    <div class="tools">
                         <div>
-                            <ButtonGroup shape="circle">
-                                <Button type="default" @click="handleAdmin">{{status ? '取消': '管理'}}</Button>
-                                <Button type="default" v-if="status" @click="handleDel">删除</Button>
-                            </ButtonGroup>
-                            <Checkbox v-model="isCheckAll" :indeterminate="isCheckAllStyle" @on-change="handleCheckAll" v-if="status" style="margin-left:20px">{{delArr.length ? `已选中${delArr.length}个文件/文件夹` : '全选'}}</Checkbox>
+                            <Button type="primary" @click="handleAddFile">新建文件夹</Button>
                         </div>
-                        <Page :total="100" />
+                        <div style="margin-left:5px;">
+                            <Button type="primary" ghost @click="handleUpload(1)">裁剪上传</Button>
+                        </div>
+                        <div style="margin-left:5px;flex:1">
+                            <Button type="default" @click="handleUpload(2)">批量上传</Button>
+                        </div>
+                        <div>
+                            <Input search enter-button placeholder="请输入" style="margin-left:5px;min-width:200px" />
+                        </div>
                     </div>
-                </Col>
-            </Row>
+                    <Breadcrumb style="padding:0 20px">
+                        <BreadcrumbItem v-for="(item ,index) in hierarchy" :key="index" @click="handleOpenFile">{{item.label}}</BreadcrumbItem>
+                    </Breadcrumb>
+                    <Row style="height:375px;margin:0px 10px;padding:0;overflow-y: scroll;">
+                        <vuedraggable v-model="tabelData">
+                            <Col :span="4" v-for="(item,index) in tabelData" :key="index" class="item" :style="{background: status || item.userSelected ?'#f1f5fa':''}">
+                                <Icon type="ios-checkmark-circle" v-if="status" class="checkmark" :color="item.adminSelected ? '#a33991':''"  @click="handleAdminSelected(item, index)"/>
+                                <Icon type="ios-checkmark-circle" class="checkSelected" :class="item.userSelected ? 'userCheck':''" v-if="!status && item.fileType == 2"  @click="handleUserSelected(item, index)"/>
+                                <div v-if="item.fileType == 1" @dblclick="handleOpenFile(item, index)">
+                                <div style="height:100px">
+                                        <Icon type="ios-folder-open" :size="80" color="rgb(255,232,148)" v-if="item.children.length"/>
+                                        <Icon type="md-folder" :size="80" color="rgb(255,232,148)" v-else/>
+                                </div>
+                                    <input type="text" :value="item.fileName">
+                                </div>
+                                <div v-if="item.fileType == 2">
+                                    <div class="image" style="height:100px" :style="{ 'background-image':'url('+ item.url +')'}"></div>
+                                    <input type="text" :value="item.fileName">
+                                </div>
+                                <div v-if="item.fileType == 3">
+                                    <Icon type="md-folder" :size="100" color="rgb(255,232,148)"/>
+                                    <input type="text">
+                                </div>
+                            </Col>
+                            <Spin size="large" fix v-if="loading"></Spin>
+                        </vuedraggable>
+                    </Row>
+                </div>
+                <div class="content-footer">
+                    <div>
+                        <ButtonGroup shape="circle">
+                            <Button type="default" @click="handleAdmin">{{status ? '取消': '管理'}}</Button>
+                            <Button type="default" v-if="status" @click="handleDel">删除</Button>
+                        </ButtonGroup>
+                        <Checkbox v-model="isCheckAll" :indeterminate="isCheckAllStyle" @on-change="handleCheckAll" v-if="status" style="margin-left:20px">{{delArr.length ? `已选中${delArr.length}个文件/文件夹` : '全选'}}</Checkbox>
+                    </div>
+                    <Page :total="100" />
+                </div>
+            </Col>
+        </Row>
         <div slot="footer">
             <span >已选择 {{slectedArr.length}} 张,还可以选择 {{limit - slectedArr.length}} 张</span>
             <Button type="text" size="large" @click="visible = false">取消</Button>
@@ -155,6 +155,9 @@
             }
         },
         methods: {
+            show (){
+                this.visible = true
+            },
             handleInitData(){
                 this.loading = true;
                 setTimeout(() => {
