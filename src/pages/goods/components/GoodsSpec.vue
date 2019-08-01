@@ -1,13 +1,13 @@
 <template>
     <Card :dis-hover="true" :shadow="false" class="multi-goods-spec">
-        <Row v-for="(item, index) in specGroup" :key="index">
+        <Row v-for="(item, index) in specList" :key="index">
             <Col :span="24" class="spec-group">
                 <span>{{item.name}}</span>
                 <Button type="text" @click="removeSpecGroup(index)">移除</Button>
             </Col>
             <Col :span="24" style="margin:5px 0 20px 0px">
                 <div>
-                    <Tag v-for="item in item.specItem" :key="item" :name="item"  type="dot" closable @on-close="handleClose">{{ item }}</Tag>
+                    <Tag v-for="(item1, index1) in item.specItem" :key="index1" :name="item1.value"  type="dot" closable @on-close="handleClose">{{ item1.name }}</Tag>
                 </div>
                 <Poptip
                     placement="bottom-start"
@@ -82,271 +82,297 @@ export default {
             isPoptipVisible: false,
             specGroupName: '',
             specItemName: '',
-            specGroup: [],
+            specList: [{
+                name: '颜色',
+                value: '0',
+                specItem:[{
+                    name: '绿色1', // 规格值
+                    value: '2', // 规格值ID
+                    shopPrice: 0,// 销售价
+                    marketPrice: "上午上学",// 市场价
+                    costPrice: 1,// 成本价
+                    goodsStock: 0,// 商品总库存
+                    goodsWeight: 0,// 重量（Kg）
+                    goodsVolume: 0// 体积（m³）
+                },{
+                    name: '绿色2', // 规格值
+                    value: '2', // 规格值ID
+                    shopPrice: 0,// 销售价
+                    marketPrice: "上午上学",// 市场价
+                    costPrice: 1,// 成本价
+                    goodsStock: 0,// 商品总库存
+                    goodsWeight: 0,// 重量（Kg）
+                    goodsVolume: 0// 体积（m³）
+                },{
+                    name: '绿色3', // 规格值
+                    value: '2', // 规格值ID
+                    shopPrice: 0,// 销售价
+                    marketPrice: "上午上学",// 市场价
+                    costPrice: 1,// 成本价
+                    goodsStock: 0,// 商品总库存
+                    goodsWeight: 0,// 重量（Kg）
+                    goodsVolume: 0// 体积（m³）
+                },{
+                    name: '绿色4', // 规格值
+                    value: '2', // 规格值ID
+                    shopPrice: 0,// 销售价
+                    marketPrice: "上午上学",// 市场价
+                    costPrice: 1,// 成本价
+                    goodsStock: 0,// 商品总库存
+                    goodsWeight: 0,// 重量（Kg）
+                    goodsVolume: 0// 体积（m³）
+                }]
+            },{
+                name: '颜色',
+                value: '0',
+                specItem:[{
+                    name: '绿色', // 规格值
+                    value: '2', // 规格值ID
+                    shopPrice: 0,// 销售价
+                    marketPrice: "上午上学",// 市场价
+                    costPrice: 1,// 成本价
+                    goodsStock: 0,// 商品总库存
+                    goodsWeight: 0,// 重量（Kg）
+                    goodsVolume: 0// 体积（m³）
+                }]
+            },{
+                name: '颜色',
+                value: '0',
+                specItem:[{
+                    name: '绿色', // 规格值
+                    value: '2', // 规格值ID
+                    shopPrice: 0,// 销售价
+                    marketPrice: "上午上学",// 市场价
+                    costPrice: 1,// 成本价
+                    goodsStock: 0,// 商品总库存
+                    goodsWeight: 0,// 重量（Kg）
+                    goodsVolume: 0// 体积（m³）
+                }]
+            }],
             reportList:[{
+                "shopPrice": 0,
+                "marketPrice": "上午上学",
+                "costPrice": 1,
+                "goodsStock": 0,
+                "goodsWeight": 0,
+                "goodsVolume": 0,
                 "list": [{
-                    "time_period_name": "上午上学",
-                    "normal_amount": 0,
-                    "be_late_amount": 1,
-                    "leave_early_amount": 0,
-                    "not_attendance_amount": 0
-                }, {
-                    "time_period_name": "下午上学",
-                    "normal_amount": 0,
-                    "be_late_amount": 0,
-                    "leave_early_amount": 0,
-                    "not_attendance_amount": 1
-                }, {
-                    "time_period_name": "下午放学",
-                    "normal_amount": 0,
-                    "be_late_amount": 0,
-                    "leave_early_amount": 0,
-                    "not_attendance_amount": 1
-                }, {
-                    "time_period_name": "上午放学",
-                    "normal_amount": 0,
-                    "be_late_amount": 0,
-                    "leave_early_amount": 1,
-                    "not_attendance_amount": 0
+                    "shopPrice": 0,
+                    "marketPrice": "上午上学",
+                    "costPrice": 1,
+                    "goodsStock": 0,
+                    "goodsWeight": 0,
+                    "goodsVolume": 0
                 }],
-                    "grade_name": "幼儿园托儿班",
-                    "class_name": "幼儿园托儿班2班",
-                    "date": "2019-02-14",
-                    "student_name": "刘小明"
-                }],
-                columns:[
-                    {title:'年级',key:'grade_name',align:'center',width:110,},
-                    {title:'班级',key:'class_name',align:'center',width:110,},
-                    {title:'日期',key:'date',align:'center',width:110,},
-                    {title:'姓名',key:'student_name',align:'center',width:110,},
-                    {
-                        title: '规格图片',
-                        key: 'list',
-                        align:'center',
-                        width:100,
-                        render: (h, params) => {
-                            return h('ul', {
-                                class:'subCol'
-                            }, this.reportList[params.index].list.map(item => {
-                                return h('li',{}, [
-                                    h('img',{
-                                        attrs: {
-                                            value: item.time_period_name
-                                        }
-                                    })
-                                ])
-                            }))
-                        }
-                    },
-                    {
-                        title: '销售价(元)',
-                        key: 'list',
-                        align:'center',
-                        width:110,
-                        render: (h, params) => {
-                            return h('ul', {
-                                class:'subCol'
-                            }, this.reportList[params.index].list.map(item => {
-                                return h('li',{}, [
-                                    h('Input',{
-                                        attrs: {
-                                            value: item.time_period_name
-                                        },
-                                        props: {
-                                            type: 'text',
-                                            size: 'small'
-                                        }
-                                    })
-                                ])
-                            }))
-                        }
-                    },
-                    {
-                        title: '市场价(元)',
-                        key: 'list',
-                        align:'center',
-                        width:110,
-                        render: (h, params) => {
-                            return h('ul', {
-                                class:'subCol'
-                            }, this.reportList[params.index].list.map(item => {
-                                return h('li',{}, [
-                                    h('Input',{
-                                        attrs: {
-                                            value: item.time_period_name
-                                        },
-                                        props: {
-                                            type: 'text',
-                                            size: 'small'
-                                        }
-                                    })
-                                ])
-                            }))
-                        }
-                    },
-                    {
-                        title: '成本价(元)',
-                        key: 'list',
-                        align:'center',
-                        width:110,
-                        render: (h, params) => {
-                            return h('ul', {
-                                class:'subCol'
-                            }, this.reportList[params.index].list.map(item => {
-                                return h('li',{}, [
-                                    h('Input',{
-                                        attrs: {
-                                            value: item.time_period_name
-                                        },
-                                        props: {
-                                            type: 'text',
-                                            size: 'small'
-                                        }
-                                    })
-                                ])
-                            }))
-                        }
-                    },
-                    {
-                        title: '库存',
-                        key: 'list',
-                        align:'center',
-                        width:110,
-                        render: (h, params) => {
-                            return h('ul', {
-                                class:'subCol'
-                            }, this.reportList[params.index].list.map(item => {
-                                return h('li',{}, [
-                                    h('Input',{
-                                        attrs: {
-                                            value: item.time_period_name
-                                        },
-                                        props: {
-                                            type: 'text',
-                                            size: 'small'
-                                        }
-                                    })
-                                ])
-                            }))
-                        }
-                    },
-                                   {
-                        title: '库存',
-                        key: 'list',
-                        align:'center',
-                        width:110,
-                        render: (h, params) => {
-                            return h('ul', {
-                                class:'subCol'
-                            }, this.reportList[params.index].list.map(item => {
-                                return h('li',{}, [
-                                    h('Input',{
-                                        attrs: {
-                                            value: item.time_period_name
-                                        },
-                                        props: {
-                                            type: 'text',
-                                            size: 'small'
-                                        }
-                                    })
-                                ])
-                            }))
-                        }
-                    },
-                    {
-                        title: '重量(kg)',
-                        key: 'list',
-                        align:'center',
-                        width:110,
-                        render: (h, params) => {
-                            return h('ul', {
-                                class:'subCol'
-                            }, this.reportList[params.index].list.map(item => {
-                                return h('li',{}, [
-                                    h('Input',{
-                                        attrs: {
-                                            value: item.time_period_name
-                                        },
-                                        props: {
-                                            type: 'text',
-                                            size: 'small'
-                                        }
-                                    })
-                                ])
-                            }))
-                        }
-                    },
-                    {
-                        title: '体积(m³)',
-                        key: 'list',
-                        align:'center',
-                        width:110,
-                        render: (h, params) => {
-                            return h('ul', {
-                                class:'subCol'
-                            }, this.reportList[params.index].list.map(item => {
-                                return h('li',{}, [
-                                    h('Input',{
-                                        attrs: {
-                                            value: item.time_period_name
-                                        },
-                                        props: {
-                                            type: 'text',
-                                            size: 'small'
-                                        }
-                                    })
-                                ])
-                            }))
-                        }
-                    },   
-                    {
-                        title: '操作',
-                        key: 'list',
-                        width:163,
-                        align:'center',
-                        fixed: 'right',
-                        render: (h, params) => {
-                            return h('ul', {
-                                class:'subCol'
-                            }, this.reportList[params.index].list.map(item => {
-                                return h('li',{}, [
-                                    h('Button',{
-                                        props: {
-                                            type: 'text',
-                                            size: 'small'
-                                        }
-                                    },'清空'),
-                                    h('Button',{
-                                        props: {
-                                            type: 'text',
-                                            size: 'small',
-                                        }
-                                    },'禁用'),
-                                    h('Button',{
-                                        props: {
-                                            type: 'text',
-                                            size: 'small'
-                                        }
-                                    },'批量填充')
-                                ])
-                            }))
-                        }
-                    },
-                ]
+            }],
+            columns:[
+                {title:'年级',key:'grade_name',align:'center'},
+                // {title:'班级',key:'class_name',align:'center',width:110,},
+                // {title:'日期',key:'date',align:'center',width:110,},
+                // {title:'姓名',key:'student_name',align:'center',width:110,},
+                {
+                    title: '规格图片',
+                    key: 'list',
+                    align:'center',
+                    width:90,
+                    render: (h, params) => {
+                        return h('ul', {
+                            class:'subCol'
+                        }, this.reportList[params.index].list.map(item => {
+                            return h('li',{}, [
+                                h('img',{
+                                    attrs: {
+                                        value: item.time_period_name
+                                    }
+                                })
+                            ])
+                        }))
+                    }
+                },
+                {
+                    title: '销售价(元)',
+                    key: 'list',
+                    align:'center',
+                    width:93,
+                    render: (h, params) => {
+                        return h('ul', {
+                            class:'subCol'
+                        }, this.reportList[params.index].list.map(item => {
+                            return h('li',{}, [
+                                h('Input',{
+                                    attrs: {
+                                        value: item.time_period_name
+                                    },
+                                    props: {
+                                        type: 'text',
+                                        size: 'small'
+                                    }
+                                })
+                            ])
+                        }))
+                    }
+                },
+                {
+                    title: '市场价(元)',
+                    key: 'list',
+                    align:'center',
+                    width: 100,
+                    render: (h, params) => {
+                        return h('ul', {
+                            class:'subCol'
+                        }, this.reportList[params.index].list.map(item => {
+                            return h('li',{}, [
+                                h('Input',{
+                                    attrs: {
+                                        value: item.time_period_name
+                                    },
+                                    props: {
+                                        type: 'text',
+                                        size: 'small'
+                                    }
+                                })
+                            ])
+                        }))
+                    }
+                },
+                {
+                    title: '成本价(元)',
+                    key: 'list',
+                    align:'center',
+                    width: 100,
+                    render: (h, params) => {
+                        return h('ul', {
+                            class:'subCol'
+                        }, this.reportList[params.index].list.map(item => {
+                            return h('li',{}, [
+                                h('Input',{
+                                    attrs: {
+                                        value: item.time_period_name
+                                    },
+                                    props: {
+                                        type: 'text',
+                                        size: 'small'
+                                    }
+                                })
+                            ])
+                        }))
+                    }
+                },
+                {
+                    title: '库存',
+                    key: 'list',
+                    align:'center',
+                    width:100,
+                    render: (h, params) => {
+                        return h('ul', {
+                            class:'subCol'
+                        }, this.reportList[params.index].list.map(item => {
+                            return h('li',{}, [
+                                h('Input',{
+                                    attrs: {
+                                        value: item.time_period_name
+                                    },
+                                    props: {
+                                        type: 'text',
+                                        size: 'small'
+                                    }
+                                })
+                            ])
+                        }))
+                    }
+                },
+                {
+                    title: '重量(kg)',
+                    key: 'list',
+                    align:'center',
+                    width:100,
+                    render: (h, params) => {
+                        return h('ul', {
+                            class:'subCol'
+                        }, this.reportList[params.index].list.map(item => {
+                            return h('li',{}, [
+                                h('Input',{
+                                    attrs: {
+                                        value: item.time_period_name
+                                    },
+                                    props: {
+                                        type: 'text',
+                                        size: 'small'
+                                    }
+                                })
+                            ])
+                        }))
+                    }
+                },
+                {
+                    title: '体积(m³)',
+                    key: 'list',
+                    align:'center',
+                    width:100,
+                    render: (h, params) => {
+                        return h('ul', {
+                            class:'subCol'
+                        }, this.reportList[params.index].list.map(item => {
+                            return h('li',{}, [
+                                h('Input',{
+                                    attrs: {
+                                        value: item.time_period_name
+                                    },
+                                    props: {
+                                        type: 'text',
+                                        size: 'small'
+                                    }
+                                })
+                            ])
+                        }))
+                    }
+                },   
+                {
+                    title: '操作',
+                    key: 'list',
+                    width:163,
+                    align:'center',
+                    fixed: 'right',
+                    render: (h, params) => {
+                        return h('ul', {
+                            class:'subCol'
+                        }, this.reportList[params.index].list.map(item => {
+                            return h('li',{}, [
+                                h('Button',{
+                                    props: {
+                                        type: 'text',
+                                        size: 'small'
+                                    }
+                                },'清空'),
+                                h('Button',{
+                                    props: {
+                                        type: 'text',
+                                        size: 'small',
+                                    }
+                                },'禁用'),
+                                h('Button',{
+                                    props: {
+                                        type: 'text',
+                                        size: 'small'
+                                    }
+                                },'批量填充')
+                            ])
+                        }))
+                    }
+                },
+            ]
         }
     },
     methods: {
         handleAdd (index){
             this.specGroup[index].specItem.push("123123")
         },
-        handleClose (){
-
-        },
+        handleClose (){},
         addSpecGroup (){
             if(!this.specGroupName){
                 return this.$Message.error('请输入规格！')
             }
-            this.specGroup.push({
+            this.specList.push({
                 name: this.specGroupName,
                 isPoptipVisible: false,
                 specItemName:'',
@@ -356,7 +382,7 @@ export default {
             this.isAddSpecGroup = false
         },
         addSpecItem (index){
-            let spec = this.specGroup[index]
+            let spec = this.specList[index]
             if(!spec.specItemName){
                 return this.$Message.error('请输入规格值！')
             }
@@ -369,10 +395,34 @@ export default {
         },
         removeSpecGroup(index){
             this.specGroup.splice(index, 1)
+        },
+        calcDescartes (array){
+            if (array.length < 2) return array[0] || [];
+            return [].reduce.call(array, function (col, set) {
+                var res = [];
+                col.forEach(function (c) {
+                    set.forEach(function (s) {
+                        var t = [].concat(Array.isArray(c) ? c : [c]);
+                        t.push(s);
+                        res.push(t);
+                    })
+                });
+                return res;
+            });
         }
     },
     mounted(){
-        console.log(123)
+        let calcSpec = []
+        for(let i = 0; i < this.specList.length; i++){
+            calcSpec.push([this.specList[i].specItem])
+        }
+        var arr = [
+                ['黑色', '白色','白色', '蓝色'], 
+                ['黑色', '白色', '蓝色'], 
+                ['1.2KG', '2.0KG', '3.0KG']
+            ]
+        let calc = this.calcDescartes(arr)
+        console.log(calc)
     }
 }
 </script>
@@ -393,7 +443,6 @@ export default {
         overflow: hidden;
     }
 }
-
 .subCol>li{
       margin:0 -18px;
       list-style:none;

@@ -64,8 +64,8 @@ export default {
     }
 </style>
 <style>
-.goods-add-content{
-    
+.goods-add-content .ivu-form{
+    margin-right: 10px;
 }
 .tabs-nav-container .ivu-tabs-bar{
     display: none;
