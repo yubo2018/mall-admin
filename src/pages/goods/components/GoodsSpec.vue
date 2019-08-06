@@ -2,32 +2,32 @@
     <Card :dis-hover="true" :shadow="false" class="multi-goods-spec">
         <Row v-for="(item, index) in skuProps" :key="index">
             <Col :span="24" class="spec-group">
-                <span>{{item.name}}</span>
-                <Button type="text" @click="removeSpecGroup(index)">移除</Button>
+                <span>{{item.prop}}</span>
+                <Button type="text" @click="removeSkuProps(index)">移除</Button>
             </Col>
             <Col :span="24" style="margin:5px 0 20px 0px">
                 <div>
-                    <Tag v-for="(item1, index1) in item.specItem" :key="index1" :name="item1.value"  type="dot" closable @on-close="handleClose">{{ item1.name }}</Tag>
+                    <Tag v-for="(item1, index1) in item.value" :key="index1" :name="item1.value"  type="dot" closable @on-close="handleClose(index, index1)">{{ item1.name }}</Tag>
                 </div>
                 <Poptip
                     placement="bottom-start"
                     v-model="item.isPoptipVisible">
                     <div slot="content" style="padding: 5px">
-                        <Input v-model="item.specItemName" enter-button placeholder="选择或输入规格">
+                        <Input v-model="item.propItemValue" enter-button placeholder="选择或输入规格">
                             <Button slot="append" @click="addSpecItem(index)">添加</Button>
                         </Input>
                         <!-- <div style="display: flex;flex-wrap: wrap;">
-                            <Tag v-for="item in specGroup" :key="item" type="dot" closable @on-close="handleClose">{{ item.name }}</Tag>
+                            <Tag v-for="item in skuProps" :key="item" type="dot" closable @on-close="handleClose">{{ item.name }}</Tag>
                         </div> -->
                     </div>
                     <Button style="margin-top: 10px;">添加规格值</Button>
                 </Poptip>
             </Col>
         </Row>
-        <Input v-model="specGroupName" v-if="isAddSpecGroup" enter-button placeholder="选择或输入规格" style="max-width:250px">
-            <Button slot="append" @click="addSpecGroup">添加</Button>
+        <Input v-model="propName" v-if="isAddSkuProps" enter-button placeholder="选择或输入规格" style="max-width:250px">
+            <Button slot="append" @click="addSkuProps">添加</Button>
         </Input>
-        <Button type="primary" ghost @click="isAddSpecGroup = true" v-else>添加规格</Button>
+        <Button type="primary" ghost @click="isAddSkuProps = true" v-else>添加规格</Button>
         <div style="border: 1px dashed #E3E2E5;margin:20px 0px;"></div>
         <Row>
             <Col :span="12" :gutter="16">
@@ -78,14 +78,14 @@
 export default {
     data () {
         return {
-            isAddSpecGroup: false,
+            isAddSkuProps: false,
             isPoptipVisible: false,
-            specGroupName: '',
-            specItemName: '',
+            propName: '',
+            propItemValue: '',
             skuProps: [{
-                name: '颜色',
-                value: '0',
-                specItem:[{
+                prop: '颜色',
+                id:'12',
+                value:[{
                     name: '绿色1', // 规格值
                     value: '2', // 规格值ID
                     shopPrice: 0,// 销售价
@@ -105,10 +105,10 @@ export default {
                     goodsVolume: 0// 体积（m³）
                 }]
             },{
-                name: '尺寸',
-                value: '0',
-                specItem:[{
-                    name: '绿色', // 规格值
+                prop: '尺寸',
+                id:'13',
+                value:[{
+                    name: '大', // 规格值
                     value: '2', // 规格值ID
                     shopPrice: 0,// 销售价
                     marketPrice: "上午上学",// 市场价
@@ -118,10 +118,19 @@ export default {
                     goodsVolume: 0// 体积（m³）
                 }]
             },{
-                name: '型号',
-                value: '0',
-                specItem:[{
-                    name: '绿色', // 规格值
+                prop: '型号',
+                id:'14',
+                value:[{
+                    name: 's', // 规格值
+                    value: '2', // 规格值ID
+                    shopPrice: 0,// 销售价
+                    marketPrice: "上午上学",// 市场价
+                    costPrice: 1,// 成本价
+                    goodsStock: 0,// 商品总库存
+                    goodsWeight: 0,// 重量（Kg）
+                    goodsVolume: 0// 体积（m³）
+                },{
+                    name: 'x', // 规格值
                     value: '2', // 规格值ID
                     shopPrice: 0,// 销售价
                     marketPrice: "上午上学",// 市场价
@@ -131,27 +140,7 @@ export default {
                     goodsVolume: 0// 体积（m³）
                 }]
             }],
-            skuMap:[{
-                "prop1": "颜色",
-                "list": [{
-                    "shopPrice": 1,
-                    "marketPrice": "上午上学",
-                    "costPrice": 1,
-                    "goodsStock": 0,
-                    "goodsWeight": 0,
-                    "goodsVolume": 0
-                }],
-            },{
-                "prop": "颜色",
-                "list": [{
-                    "shopPrice": 0,
-                    "marketPrice": "",
-                    "costPrice": 1,
-                    "goodsStock": 0,
-                    "goodsWeight": 0,
-                    "goodsVolume": 0
-                }],
-            }],
+            skuMap:[],
             columns:[
                 {
                     title: '规格图片',
@@ -337,37 +326,42 @@ export default {
         }
     },
     methods: {
-        handleAdd (index){
-            this.specGroup[index].specItem.push("123123")
+        handleClose (i1, i2){
+            this.skuProps[i1].value.splice(i2, 1)
+            this.handleCalcSku()
         },
-        handleClose (){},
-        addSpecGroup (){
-            if(!this.specGroupName){
+        addSkuProps (){
+            if(!this.propName){
                 return this.$Message.error('请输入规格！')
             }
             this.skuProps.push({
-                name: this.specGroupName,
+                prop: this.propName,
                 isPoptipVisible: false,
-                specItemName:'',
-                specItem: [],
+                propItemValue:'',
+                value: [],
             })
-            this.specGroupName = '';
-            this.isAddSpecGroup = false
+            this.propName = '';
+            this.isAddSkuProps = false
+            this.handleCalcSku()
         },
         addSpecItem (index){
-            let spec = this.skuProps[index]
-            if(!spec.specItemName){
+            let prop = this.skuProps[index]
+            if(!prop.propItemValue){
                 return this.$Message.error('请输入规格值！')
             }
-            if(spec.specItem.includes(spec.specItemName)){
-                return this.$Message.error(`${spec.specItemName} 已存在！`)
+            if(JSON.stringify(prop.value).includes(prop.propItemValue)){
+                return this.$Message.error(`${prop.propItemValue} 已存在！`)
             }
-            spec.specItem.push(spec.specItemName)
-            spec.specItemName = '';
-            spec.isPoptipVisible = false
+            prop.value.push({
+                name: prop.propItemValue
+            })
+            prop.propItemValue = '';
+            prop.isPoptipVisible = false
+            this.handleCalcSku()
         },
-        removeSpecGroup(index){
-            this.specGroup.splice(index, 1)
+        removeSkuProps(index){
+            this.skuProps.splice(index, 1)
+            this.handleCalcSku()
         },
         calcDescartes (array){
             if (array.length < 2) return array[0] || [];
@@ -382,95 +376,76 @@ export default {
                 });
                 return res;
             });
+        },
+        handleCalcSku () {
+            let arr = []
+            this.skuProps.forEach((item, index) =>{
+                arr.push([])
+                item.value.forEach(item1 =>{
+                    arr[index].push(`${item.prop}=${item1.name}`)
+                })
+            })
+            let newArr = arr.filter((item) => item.length)
+            let calcSku= this.calcDescartes(newArr)
+            let skuMap = calcSku[0].map((item0, index) =>{
+                let spt = item0.split(`=`)
+                let value = calcSku.map(item1 =>{
+                        return item1[index]
+                    })
+                return {
+                    prop: spt[0],
+                    value: [...new Set(value)],
+                    list: calcSku.map(item =>{
+                        return {
+                            shopPrice: "",// 销售价
+                            marketPrice: "",// 市场价
+                            costPrice: "",// 成本价
+                            goodsStock: "",// 商品总库存
+                            goodsWeight: "",// 重量（Kg）
+                            goodsVolume: ""// 体积（m³）
+                        }
+                    })
+                }
+            })
+            this.skuMap = skuMap
+            this.mergeSkuTabel()
+
+        },
+        mergeSkuTabel(){
+            this.skuMap.forEach(item =>{
+                console.log()
+                this.columns.unshift({
+                    title: item.prop,
+                    align:'center',
+                    width:100,
+                    render: (h, params) => {
+                        return h('ul', {
+                            class:'subCol'
+                        }, item.value.map(item => {
+                            return h('li',{}, [
+                                h('text',{},item.split(`=`)[1])
+                            ])
+                        }))
+                    }
+                })
+            })
         }
     },
     mounted(){
-        var arr = this.calcDescartes([ ['黑色', '白色', '蓝色'], ['1.2KG', '2.0KG', '3.0KG'] ]) 
-    console.log(arr)
-
-        return
-        arr.forEach((item, index) =>{
-            this.skuMap.unshift({
-                prop: "颜色",
-                list: item,
-            })
-            this.columns.unshift({
-                title: "颜色",
-                align:'center',
-                width:100,
-                render: (h, params) => {
-                    return h('ul', {
-                        class:'subCol'
-                    }, this.skuMap[params.index].list.map(item => {
-                        console.log(this.skuMap[params.index].list)
-                        return h('li',{}, [
-                            h('Input',{
-                                attrs: {
-                                    value: item.time_period_name
-                                },
-                                props: {
-                                    type: 'text',
-                                    size: 'small'
-                                }
-                            })
-                        ])
-                    }))
-                }
-            })
-        })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        return
-        let calc = this.calcDescartes(arr)
-        let a = []
-        let newArr = this.skuProps
-        newArr.forEach((item, index, arr) =>{
-            console.log(item, index, arr)
-        })
-        for(let i = 0; i < newArr.length; i++){
-            a.unshift({
-                title: newArr[i].name,
-                key: 'list',
-                align:'center',
-                width:100,
-                render: (h, params) => {
-                    return h('ul', {
-                        class:'subCol'
-                    }, this.skuMap[params.index].list.map(item => {
-                        return h('li',{}, [
-                            h('Input',{
-                                attrs: {
-                                    value: item.time_period_name
-                                },
-                                props: {
-                                    type: 'text',
-                                    size: 'small'
-                                }
-                            })
-                        ])
-                    }))
-                }
-            })
-        }
-          
+        this.handleCalcSku()
         
     }
 }
+//循环方式组合
+function generateGroup(arr) {
+    //初始化结果为第一个数组
+    var result= new Array();
+    //字符串形式填充数组
+    for(var i=0;i<arr[0].length;i++){
+        result.push(JSON.stringify(arr[0][i]));
+    }
+}
+generateGroup([[{id:1,value:"红色"},{id:2,value:"蓝色"}],[{id:3,value:"XX"},{id:4,value:"XXS"}],[{id:5,value:"10m"},{id:6,value:"20m"}]]);
 </script>
 
 <style lang="less">

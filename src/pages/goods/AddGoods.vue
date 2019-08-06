@@ -74,8 +74,8 @@ export default {
     padding: 16px 0;
 }
 .ivu-steps{
-    margin-top: 20px;
-    margin-bottom: 35px;
-    margin-left: 100px;
+    width: 100%;
+    padding-left: 10%;
+    margin: 20px auto 35px;
 }
 </style>
